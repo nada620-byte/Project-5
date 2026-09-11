@@ -17,7 +17,8 @@ class Board{
     vector<vector<char>> grid;
     int size;
 
-    Board(int s) : size(s), grid(s, vector<char>(s, ' ')) {}
+    public:
+    Board(int s = 3) : size(s), grid(s, vector<char>(s, ' ')) {}
 
 
      bool placeMove(int row, int col, char symbol) {
