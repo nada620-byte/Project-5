@@ -265,6 +265,124 @@ public:
     }
 };
 
+
+class GameMenu
+{
+    private:
+        string player1Name;
+        string player2Name;
+        Difficulty difficulty;
+        int mode;
+
+    public:
+
+        void showMenu()
+        {
+            cout << "\n============================\n";
+            cout << "       TIC TAC TOE\n";
+            cout << "============================\n";
+            cout << "1. Player vs Player\n";
+            cout << "2. Player vs Computer\n";
+            cout << "3. Exit\n";
+            cout << "============================\n";
+        }
+
+        int getMode()
+        {
+            while (true)
+            {
+                showMenu();
+
+                cout << "Choose a mode: ";
+                cin >> mode;
+
+                if (cin.fail())
+                {
+                    cout << "Invalid input! Please enter a number.\n";
+                    cin.clear();
+                    cin.ignore(1000, '\n');
+                    continue;
+                }
+
+                if (mode >= 1 && mode <= 3)
+                {
+                    return mode;
+                }
+
+                cout << "Invalid choice! Choose 1, 2, or 3.\n";
+            }
+        }
+
+        void setupPvP()
+        {
+            cout << "\n--- Player vs Player ---\n";
+
+            cout << "Enter Player 1 name: ";
+            cin >> player1Name;
+
+            cout << "Enter Player 2 name: ";
+            cin >> player2Name;
+        }
+
+        void setupPvC()
+        {
+            cout << "\n--- Player vs Computer ---\n";
+
+            cout << "Enter your name: ";
+            cin >> player1Name;
+
+            cout << "\nChoose difficulty:\n";
+            cout << "1. Easy\n";
+            cout << "2. Hard\n";
+
+            int choice;
+
+            while (true)
+            {
+                cout << "Choose difficulty: ";
+                cin >> choice;
+
+                if (cin.fail())
+                {
+                    cout << "Invalid input! Please enter a number.\n";
+                    cin.clear();
+                    cin.ignore(1000, '\n');
+                    continue;
+                }
+
+                if (choice == 1)
+                {
+                    difficulty = Difficulty::EASY;
+                    break;
+                }
+                else if (choice == 2)
+                {
+                    difficulty = Difficulty::HARD;
+                    break;
+                }
+
+                cout << "Invalid choice! Choose 1 or 2.\n";
+            }
+
+            player2Name = "Computer";
+        }
+
+        string getPlayer1Name() const
+        {
+            return player1Name;
+        }
+
+        string getPlayer2Name() const
+        {
+            return player2Name;
+        }
+
+        Difficulty getDifficulty() const
+        {
+            return difficulty;
+        }
+};
+
 // ======================================================
 // AIPlayer Class (extends Player)
 // ======================================================
