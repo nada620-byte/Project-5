@@ -391,7 +391,71 @@ class AIPlayer
     // ======================================================
     // Game Class
     // ======================================================
-class Game
+class Game 
+{ 
+    private : 
+        Board board;
+        Player *player1;
+        Player *player2;
+        Player *currentPlayer;
+    
+    public :
+     
+    void switchPlayer() //toggles between the players
+    {
+        if(currentPlayer == player1)
+          currentPlayer = player2;
+       else 
+         currentPlayer = player1;   
+    }
+
+    void handleHumanMove(Player* player) // handles one human turn
+    {
+        int row,col;
+        while(true)
+        {
+            player->getMove(row, col);  //gets the row and the column
+            
+            if(board.makeMove(row,col,player->getSymbol()))
+            {
+                break;
+            }
+
+            cout << "Invalid move. Please try again,\n" << endl;
+        }
+    }
+
+    void handleAIMove(Player*player) //handles computer one turn
+    {
+        cout << "AI is thinking...\n" ;
+
+        int row, col;
+        player->getMove(row,col);
+        board.makeMove(row , col , player->getSymbol());
+    }
+
+    void playRound()
+    {
+        while(true)
+        {
+            board.display();
+
+            cout<< currentPlayer->getName()
+                << "'s turn("
+                << currentPlayer->getSymbol()
+                << ")" << endl;
+            
+                if(dynamic_cast<AIPlayer*>(currentPlayer) != nullptr)
+                    handleAIMove(currentPlayer);
+                else 
+                    handleHumanMove(currentPlayer);
+                    
+               if(checkGameEnd())
+                    break;
+                    
+              switchPlayer();        
+        }   
+    }
 
     // Game end detection, result display, and the replay loop
 
