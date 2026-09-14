@@ -7,106 +7,244 @@
 
 using namespace std;
 
-enum class Difficulty { EASY, HARD };
+enum class Difficulty
+{
+    EASY,
+    HARD
+};
 
 // ======================================================
 // Board Class
 // ======================================================
-class Board{
-    private:
+class Board
+{
+private:
     vector<vector<char>> grid;
     int size;
 
-    public:
+public:
     Board(int s = 3) : size(s), grid(s, vector<char>(s, ' ')) {}
 
-
-     bool placeMove(int row, int col, char symbol) {
-        if (row >= 0 && row < size && col >= 0 && col < size && grid[row][col] == ' ') {
+    bool placeMove(int row, int col, char symbol)
+    {
+        if (row >= 0 && row < size && col >= 0 && col < size && grid[row][col] == ' ')
+        {
             grid[row][col] = symbol;
             return true;
         }
         return false;
     }
 
-    char getCell(int row, int col) const {
-        if (row >= 0 && row < size && col >= 0 && col < size) {
+    char getCell(int row, int col) const
+    {
+        if (row >= 0 && row < size && col >= 0 && col < size)
+        {
             return grid[row][col];
         }
         return ' ';
     }
 
-    int getSize() const {
+    int getSize() const
+    {
         return size;
     }
+    // ======================================================
+    // Check Win
+    // ======================================================
+    bool checkWin(char symbol) const
+    {
+        if (symbol == ' ')
+        {
+            return false;
+        }
 
+        // Check Rows
+        for (int row = 0; row < size; row++)
+        {
+            bool win = true;
 
+            for (int col = 0; col < size; col++)
+            {
+                if (grid[row][col] != symbol)
+                {
+                    win = false;
+                    break;
+                }
+            }
+
+            if (win)
+            {
+                return true;
+            }
+        }
+
+        // Check Columns
+        for (int col = 0; col < size; col++)
+        {
+            bool win = true;
+
+            for (int row = 0; row < size; row++)
+            {
+                if (grid[row][col] != symbol)
+                {
+                    win = false;
+                    break;
+                }
+            }
+
+            if (win)
+            {
+                return true;
+            }
+        }
+
+        // Check Main Diagonal
+        bool win = true;
+
+        for (int i = 0; i < size; i++)
+        {
+            if (grid[i][i] != symbol)
+            {
+                win = false;
+                break;
+            }
+        }
+
+        if (win)
+        {
+            return true;
+        }
+
+        // Check Anti-Diagonal
+        win = true;
+
+        for (int i = 0; i < size; i++)
+        {
+            if (grid[i][size - 1 - i] != symbol)
+            {
+                win = false;
+                break;
+            }
+        }
+
+        if (win)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    // ======================================================
+    // Check if Board is Full
+    // ======================================================
+    bool isFull() const
+    {
+
+        for (int row = 0; row < size; row++)
+        {
+            for (int col = 0; col < size; col++)
+            {
+
+                if (grid[row][col] == ' ')
+                {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    // ======================================================
+    // Reset Board
+    // ======================================================
+    void reset()
+    {
+
+        for (int row = 0; row < size; row++)
+        {
+            for (int col = 0; col < size; col++)
+            {
+                grid[row][col] = ' ';
+            }
+        }
+    }
+
+    // ======================================================
+    // Force Clear Board
+    // ======================================================
+    void forceClear()
+    {
+        grid.assign(size, vector<char>(size, ' '));
+    }
 };
-
-
-
-
 
 // ======================================================
 // Player Class (Abstract Base)
 // ======================================================
-class Player {
+class Player
+{
 protected:
     string name;
     char symbol;
 
 public:
-    Player(const string& name, char symbol){
+    Player(const string &name, char symbol)
+    {
         this->name = name;
-		this->symbol = symbol;
+        this->symbol = symbol;
     }
 
-    virtual void getMove(Board& board, int& row, int& col) = 0;
+    virtual void getMove(Board &board, int &row, int &col) = 0;
 
-    string getName() const {
+    string getName() const
+    {
         return name;
     }
 
-    char getSymbol() const {
+    char getSymbol() const
+    {
         return symbol;
     }
 
-    void setName(const string& newName) {
+    void setName(const string &newName)
+    {
         name = newName;
     }
 
     virtual ~Player() {}
 };
 
-
-
-
-
-
-
 // ======================================================
 // HumanPlayer Class (extends Player)
 // ======================================================
-class HumanPlayer : public Player {
+class HumanPlayer : public Player
+{
 public:
     HumanPlayer(string name, char symbol) : Player(name, symbol) {}
 
-    void getMove(const Board& board, int& row, int& col) override{
+    void getMove(const Board &board, int &row, int &col) override
+    {
         int r, c;
 
-        while (true) {
-            cout <<"\n"<< name << " (" << symbol << "), enter row (1-3) and column (1-3):\n";
-			cout << "\t>> ";
-			cin >> r >> c;
-         
-            if (cin.fail()) {
+        while (true)
+        {
+            cout << "\n"
+                 << name << " (" << symbol << "), enter row (1-3) and column (1-3):\n";
+            cout << "\t>> ";
+            cin >> r >> c;
+
+            if (cin.fail())
+            {
                 cout << "Invalid input! Numbers only.\n";
                 cin.clear();
                 cin.ignore(1000, '\n');
                 continue;
             }
 
-            if (r < 1 || r > 3 || c < 1 || c > 3) {
+            if (r < 1 || r > 3 || c < 1 || c > 3)
+            {
                 cout << "Invalid coordinates! Choose numbers between 1 and 3.\n";
                 continue;
             }
@@ -114,7 +252,8 @@ public:
             int internalRow = r - 1;
             int internalCol = c - 1;
 
-            if (board.getCell(internalRow, internalCol) != ' ') {
+            if (board.getCell(internalRow, internalCol) != ' ')
+            {
                 cout << "Cell already occupied! Try again.\n";
                 continue;
             }
@@ -126,43 +265,19 @@ public:
     }
 };
 
-
-
-
-
-
 // ======================================================
 // AIPlayer Class (extends Player)
 // ======================================================
 class AIPlayer
 
+    // ======================================================
+    // Game Class
+    // ======================================================
+    class Game
 
-
-
-
-
-
-
-// ======================================================
-// Game Class
-// ======================================================
-class Game
-
-
-
-
-
-
-
-
-
-// ======================================================
-// Main entry point
-// ======================================================
-int main() {
-
-
-
-
-
+    // ======================================================
+    // Main entry point
+    // ======================================================
+    int main()
+{
 }
