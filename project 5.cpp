@@ -273,11 +273,57 @@ class AIPlayer
     // ======================================================
     // Game Class
     // ======================================================
-    class Game
+class Game
+
+    // Game end detection, result display, and the replay loop
+
+    bool checkGameEnd() {
+        return board.checkWin('X') || board.checkWin('O') || board.isFull();
+    }
+
+    void displayResult() const {
+        if (board.checkWin(player1->getSymbol())) {
+            cout << player1->getName() << " (" << player1->getSymbol() << ") wins!\n";
+        } else if (board.checkWin(player2->getSymbol())) {
+            cout << player2->getName() << " (" << player2->getSymbol() << ") wins!\n";
+        } else {
+            cout << "It's a draw!\n";
+        }
+    }
+
+    void playRound() {
+        board.reset();
+        currentPlayer = player1;
+
+        while (!checkGameEnd()) {
+            board.display();
+            cout << currentPlayer->getName() << "'s turn (" << currentPlayer->getSymbol() << ")\n";
+
+            if (dynamic_cast<AIPlayer*>(currentPlayer)) {
+                handleAIMove(currentPlayer);
+            } else {
+                handleHumanMove(currentPlayer);
+            }
+            switchPlayer();
+        }
+
+        board.display();
+        displayResult();
+
+        char replay;
+        cout << "Play again? (y/n): ";
+        cin >> replay;
+        if (replay == 'y' || replay == 'Y') {
+            playRound();
+        }
+    }
+};
 
     // ======================================================
     // Main entry point
     // ======================================================
-    int main()
-{
+int main() {
+    Game game;
+    game.start();
+    return 0;
 }
