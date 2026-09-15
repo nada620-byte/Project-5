@@ -414,7 +414,63 @@ class GameMenu
 // ======================================================
 // AIPlayer Class (extends Player)
 // ======================================================
-class AIPlayer
+// ======================================================
+// AIPlayer Class (extends Player)
+// ======================================================
+class AIPlayer : public Player
+{
+private:
+    Difficulty difficulty;
+    char opponentSymbol;
+
+public:
+    AIPlayer(const string &name, char symbol, char oppSymbol, Difficulty diff)
+        : Player(name, symbol), difficulty(diff), opponentSymbol(oppSymbol)
+    {
+    }
+
+    void setDifficulty(Difficulty diff)
+    {
+        difficulty = diff;
+    }
+
+    void getRandomMove(const Board &board, int &row, int &col) const
+    {
+        // Collect all empty cells
+        vector<pair<int, int>> emptyCells;
+        int size = board.getSize();
+        
+        for (int r = 0; r < size; r++)
+        {
+            for (int c = 0; c < size; c++)
+            {
+                if (board.getCell(r, c) == ' ')
+                {
+                    emptyCells.push_back(make_pair(r, c));
+                }
+            }
+        }
+        
+        // Pick a random empty cell
+        if (!emptyCells.empty())
+        {
+            int randomIndex = rand() % emptyCells.size();
+            row = emptyCells[randomIndex].first;
+            col = emptyCells[randomIndex].second;
+        }
+    }
+
+    void getMove(Board &board, int &row, int &col) override
+    {
+        if (difficulty == Difficulty::EASY)
+        {
+            getRandomMove(board, row, col);
+        }
+        // HARD mode will be implemented in Story 6
+    }
+
+    ~AIPlayer() {}
+};
 
     // ======================================================
     // Game Class
