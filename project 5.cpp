@@ -414,9 +414,7 @@ class GameMenu
 // ======================================================
 // AIPlayer Class (extends Player)
 // ======================================================
-// ======================================================
-// AIPlayer Class (extends Player)
-// ======================================================
+
 class AIPlayer : public Player
 {
 private:
@@ -589,6 +587,7 @@ class Game
     // Main entry point
     // ======================================================
 int main() {
+    srand(time(0));
     Game game;
     game.start();
     return 0;
