@@ -178,6 +178,34 @@ public:
     {
         grid.assign(size, vector<char>(size, ' '));
     }
+    void display() const
+    {
+        cout << "\n    ";
+        for (int col = 0; col < size; col++)
+        {
+            cout << (col + 1) << "   ";
+        }
+        cout << "\n";
+
+        for (int row = 0; row < size; row++)
+        {
+            cout << (row + 1) << " ";
+            for (int col = 0; col < size; col++)
+            {
+                cout << "| " << grid[row][col] << " ";
+            }
+            cout << "|\n";
+
+            cout << "  ";
+            for (int col = 0; col < size; col++)
+            {
+                cout << "+---";
+            }
+            cout << "+\n";
+        }
+        cout << endl;
+    }
+
 };
 
 // ======================================================
